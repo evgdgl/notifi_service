@@ -2,7 +2,7 @@
 
 This project is API for sending notifications via http.
 
-The project was created as a test task.
+The project was created as a test task not for production.
 
 
 ## How this is working?
