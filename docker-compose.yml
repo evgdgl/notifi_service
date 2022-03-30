@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:12.0-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=notification
+      - POSTGRES_PASSWORD=django_notification
+      - POSTGRES_DB=notification_service
+
+  web:
+    build: ./project
+    command: bash -c '
+             while !</dev/tcp/db/5432; do sleep 1; done;
+             python manage.py makemigrations service
+             && python manage.py migrate
+             && python manage.py createsuperuser --noinput
+             && python manage.py collectstatic --no-input --clear
+             && python manage.py runserver 0.0.0.0:8000'
+    volumes:
+      - ./project:/usr/src/app/
+    ports:
+      - 8000:8000
+    env_file:
+      - ./.env.dev
+
+    depends_on:
+      - redis
+      - db
+
+  redis:
+    image: redis:alpine
+  celery:
+    build: ./project
+    command: celery -A core worker -l info
+    volumes:
+      - ./project:/usr/src/app
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - redis
+
+  celery-beat:
+    build: ./project
+    command: celery -A core beat -l info
+    volumes:
+      - ./project:/usr/src/app/
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - redis
+volumes:
+  postgres_data:
