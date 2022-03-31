@@ -37,6 +37,7 @@ class SendingViewSet(viewsets.ModelViewSet):
     
     queryset = Sending.objects.all()
     serializer_class = SendingSerializer
+    authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
     
 
@@ -50,6 +51,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
+    authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
     
 
@@ -61,7 +63,7 @@ class CommonStatistic(viewsets.ViewSet):
     amount, customer properties, message text.
     
     """
-    
+    authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
     
     def list(self, request, format=None):
@@ -93,7 +95,7 @@ class SendingStatistic(APIView):
     by sending id.
     
     """
-    
+    authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
     
     def get(self, request, pk):
