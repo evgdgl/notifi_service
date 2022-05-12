@@ -26,7 +26,7 @@ The API can also provide statistics on created mailing lists and sent messages a
 Clone down project.
 
 ```sh
-$ git clone https://github.com/evgdgl/web-api.git
+$ git clone https://github.com/evgdgl/notifi_service
 $ cd web-api
 ```
 
